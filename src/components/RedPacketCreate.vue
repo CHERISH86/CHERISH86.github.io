@@ -3,13 +3,13 @@
     <el-form :model="submitRedPacket" ref="submitRedPacketForm" label-width="100px" class="demo-ruleForm">
       <el-form-item
         label="红包金额："
-        prop="totalmoney"
+        prop="totalMoney"
         :rules="[
-          { required: true, message: '金额不能为空'},
-          { type: 'number', message: '金额须为数字'}
+          { required: true, trigger: 'blur', message:'红包金额不能为空'},
+          { pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/, message: '请输入正确金额格式'}
         ]"
       >
-      <el-input type="age" v-model.number="submitRedPacket.totalmoney" autocomplete="off" placeholder="请输入整数或者小数"></el-input>
+      <el-input type="string" v-model="submitRedPacket.totalMoney" autocomplete="off" placeholder="金额可保留两位小数"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -20,7 +20,7 @@
           { type: 'number', message: '个数须为数字'}
         ]"
       >
-      <el-input type="age" v-model.number="submitRedPacket.count" autocomplete="off" placeholder="请输入整数"></el-input>
+      <el-input v-model.number="submitRedPacket.count" autocomplete="off" placeholder="请输入整数"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -45,7 +45,7 @@ export default {
   data () {
     return {
       submitRedPacket: {
-        totalmoney: '',
+        totalMoney: '',
         count: '',
         typeRadio: '1',
         info: null
@@ -60,7 +60,7 @@ export default {
             method: 'post',
             url: '/api/setred',
             data: {
-              totalmoney: this.submitRedPacket.totalmoney,
+              totalMoney: this.submitRedPacket.totalMoney,
               count: this.submitRedPacket.count,
               // 创建者id为假数据！！！
               sendid: 2
