@@ -5,7 +5,7 @@
 
     <el-container>
       <el-header>
-        Red Packet
+        <img src="../assets/logo_RedPacket.png" class="logo">
       </el-header>
       <el-container>
         <el-aside width="15%">
@@ -38,7 +38,7 @@
             </el-submenu>
             <el-menu-item index="3">
               <i class="el-icon-message"></i>
-              <span slot="title">查看详情</span>
+              <span slot="title">查看进度</span>
             </el-menu-item>
 
           </el-menu>
@@ -58,17 +58,6 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
-  data () {
-    const item = {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }
-    return {
-      tableData: Array(20).fill(item)
-    }
-  },
   methods: {
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
@@ -77,18 +66,19 @@ export default {
       console.log(key, keyPath)
     },
     handleSelect (key, keyPath) {
+      console.log(key)
       switch (key) {
         case '1':
           this.$router.push('/RedPacketCreate')
           break
         case '2-1':
-          this.$router.push('/RedPacketCreate')
+          this.$router.push('/BasicMes')
           break
         case '2-2':
-          this.$router.push('/RedPacketCreate')
+          this.$router.push('/StatusSet')
           break
         case '3':
-          this.$router.push('/RedPacketCreate')
+          this.$router.push('/Progress')
           break
       }
     }
@@ -112,5 +102,10 @@ export default {
   .el-aside, .el-menu, .el-menu-item-group {
     background-color:rgb(238, 241, 246);
     color:  #333;
+  }
+  .logo, .a {
+    margin: 10px 0 10px 8px;
+    width: 40px;
+    height: 40px;
   }
 </style>
