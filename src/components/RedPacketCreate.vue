@@ -1,5 +1,5 @@
 <template>
-  <div style="width:30%; margin:150px auto">
+  <div style="width:30%; margin:13% auto">
     <el-form :model="submitRedPacket" ref="submitRedPacketForm" label-width="100px" class="demo-ruleForm">
       <el-form-item
         label="红包金额："
@@ -25,8 +25,8 @@
 
       <el-form-item
         label="红包类型：">
-        <el-radio v-model="submitRedPacket.typeRadio" label="1">普通红包</el-radio>
-        <el-radio v-model="submitRedPacket.typeRadio" label="2">拼手气红包</el-radio>
+        <el-radio v-model="submitRedPacket.typeRadio" label="1">拼手气红包</el-radio>
+        <el-radio v-model="submitRedPacket.typeRadio" label="2">普通红包</el-radio>
       </el-form-item>
 
       <el-form-item class="button_item">

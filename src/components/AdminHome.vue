@@ -47,7 +47,7 @@
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>
+          <el-footer class="m-footer">
             鲁ICP备09096283 | © 2000-2020 Haier.com. All rights reserved.
           </el-footer>
         </el-container>
@@ -96,8 +96,9 @@ export default {
   .el-footer {
     background-color: rgb(238, 241, 246);
     text-align: center;
-    padding: 15px;
-    font-size: 15px;
+    padding: 13px;
+    font-size: 14px;
+    height: 40px !important;
   }
   .el-aside, .el-menu, .el-menu-item-group {
     background-color:rgb(238, 241, 246);

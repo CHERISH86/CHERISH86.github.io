@@ -53,29 +53,34 @@
     </el-table>
 
     <!-- dialog 组件 -->
-    <el-dialog title="修改红包" :visible.sync="dialogForm.visible">
+    <el-dialog
+      title="修改红包"
+      :visible.sync="dialogForm.visible"
+      width=36%
+      :close-on-click-modal='false'>
+
       <!-- 内嵌表单 用于输入更新后的数据 -->
-      <el-form :model="updateRedForm">
+      <el-form :model="updateRedForm" style="margin: 0 17%">
         <el-form-item
-          label='红包金额'
+          label='红包金额：'
           prop="totalMoney"
           :label-width="dialogForm.labelWidth"
           :rules="[
             { required: true, trigger: 'blur', message:'红包金额不能为空'},
             { pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/, message: '请输入正确金额格式'}
-          ]"
-        >
-          <el-input v-model="updateRedForm.totalMoney" auto-complete="off"></el-input>
+          ]">
+          <el-input style="width:208px" v-model="updateRedForm.totalMoney" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label='红包个数'
+          label='红包个数：'
           :label-width="dialogForm.labelWidth">
-          <el-input-number v-model="updateRedForm.count" auto-complete="off" :min="1" :precision='0'></el-input-number>
+          <el-input-number style="width:208px" v-model="updateRedForm.count" auto-complete="off" :min="1" :precision='0'></el-input-number>
         </el-form-item>
         <el-form-item
-          label="红包类型：">
-          <el-radio v-model="updateRedForm.typeRadio" label="1">普通红包</el-radio>
-          <el-radio v-model="updateRedForm.typeRadio" label="2">拼手气红包</el-radio>
+          label="红包类型："
+          :label-width="dialogForm.labelWidth">
+          <el-radio v-model="updateRedForm.typeRadio" label="1">拼手气红包</el-radio>
+          <el-radio v-model="updateRedForm.typeRadio" label="2">普通红包</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -83,6 +88,17 @@
         <el-button type="primary" @click="submitUpdateRedForm('updateRedForm')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="pagination.currentPage"
+        :page-size="pagination.pageSize"
+        layout="prev, pager, next, jumper"
+        :total="pagination.total">
+        </el-pagination>
+      </div>
   </div>
 </template>
 
@@ -93,20 +109,25 @@ export default ({
   data (){
     return {
       tableData: [{
-        rid: '1',
-        totalMoney: '1',
-        count: '1',
-        createTime: '1'
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: 1
       }],
       dialogForm: {
         visible: false,
-        labelWidth: '120px'
+        labelWidth: '100px'
       },
       updateRedForm: {
         totalMoney: '',
         count: '',
         rid: '',
-        typeRadio: ''
+        typeRadio: '1'
+      },
+      pagination: {
+        total: 1,
+        currentPage: 1,
+        pageSize: 10
       }
     }
   },
@@ -134,16 +155,49 @@ export default ({
           message: response.data.message,
           type: 'success',
           center: true
+        }),
+        axios({
+          method: 'post',
+          url: '/api/getpageredinfo',
+          params: {
+            currentPage: this.pagination.currentPage,
+            pageSize: 10
+          }
+          }).then(res => {
+          this.tableData = []
+          this.tableData = res.data.data.pageRecode
+        }).catch(function (error) {
+          console.log(error)
         })
-      }).catch(error => {
-        this.$message({
-          showClose: true,
-          message: error,
-          type: 'error',
-          center: true
+        }).catch(error => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: 'error',
+            center: true
+          })
         })
-      })
       this.dialogForm.visible = false
+    },
+    handleSizeChange(size) {
+      this.pagination.pageSize = size
+      console.log('每页' + this.pagination.pageSize +'条')
+    },
+    handleCurrentChange(){
+      console.log('当前是第' + this.pagination.currentPage +'页')
+      axios({
+      method: 'post',
+      url: '/api/getpageredinfo',
+      params: {
+          currentPage: this.pagination.currentPage,
+          pageSize: 10
+        }
+      }).then(res => {
+        this.tableData = []
+        this.tableData = res.data.data.pageRecode
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
     handleBegin (index, row) {
       console.log(index, row)
@@ -152,10 +206,15 @@ export default ({
   mounted: function () {
     var _this = this
     axios({
-      method: 'get',
-      url: '/api/getredinfo'
+      method: 'post',
+      url: '/api/getpageredinfo',
+      params: {
+          currentPage: 1,
+          pageSize: 10
+        }
     }).then(function (res) {
-      _this.tableData = res.data.data
+      _this.tableData = res.data.data.pageRecode
+      _this.pagination.total = res.data.data.total
     }).catch(function (error) {
       console.log(error)
     })
@@ -164,6 +223,10 @@ export default ({
 </script>
 
 <style>
+.block  {
+text-align: center;
+margin-top: 12px;
+}
 </style>
 
 // beforeClose: (action, instance, done) => {
