@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>添加红包</div>
     <el-table
       :data="tableData"
       style="width: 100%"
@@ -9,7 +8,7 @@
 
       <el-table-column
         type="index"
-        width="50"
+        width="50px"
         label="序号"
         align="center">
       </el-table-column>
@@ -55,21 +54,29 @@
       </el-table-column>
 
       <el-table-column label="操作" align="center">
+        <template slot="header" slot-scope="scope">
+           <el-button
+            type="primary"
+            plain round
+            size="small"
+            @click="goToCreate">添加红包
+          </el-button>
+        </template>
         <template slot-scope="scope">
-        <el-button
-          size="mini"
-          icon="el-icon-edit"
-          round
-          :disabled='scope.row.status == 0 ? false : true'
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          icon="el-icon-check"
-          round
-          plain
-          :disabled='scope.row.status == 0 ? false : true'
-          @click="handleBegin(scope.$index, scope.row)">开抢</el-button>
+          <el-button
+            size="mini"
+            icon="el-icon-edit"
+            round
+            :disabled='scope.row.status == 0 ? false : true'
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            icon="el-icon-check"
+            round
+            plain
+            :disabled='scope.row.status == 0 ? false : true'
+            @click="handleBegin(scope.$index, scope.row)">开抢</el-button>
       </template>
       </el-table-column>
     </el-table>
@@ -166,6 +173,55 @@ export default ({
         count: 1,
         createTime: '--',
         status: 2
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
+        },
+        {
+        rid: 1,
+        totalMoney: 1,
+        count: 1,
+        createTime: '--',
+        status: 0
         }],
       dialogForm: {
         visible: false,
@@ -330,6 +386,9 @@ export default ({
     },
     filterType(value, row){
       return row.status === value
+    },
+    goToCreate(){
+      this.$router.replace('/RedPacketCreate')
     }
   },
   mounted: function () {
@@ -353,7 +412,8 @@ export default ({
 
 <style>
 .block  {
-text-align: center;
-margin-top: 12px;
+/* text-align: center;
+margin-top: 12px; */
+position: absolute;left: 50%; bottom: 7%;
 }
 </style>
