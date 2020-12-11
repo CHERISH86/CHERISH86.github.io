@@ -4,13 +4,14 @@
       :data="tableData"
       style="width: 100%"
       :row-style="{height: '0px'}"
-      :cell-style="{padding: '9px'}">
+      :cell-style="{padding: '8px'}">
 
+      <!-- width宽度不够会导致数字垂直排列 -->
       <el-table-column
         type="index"
-        width="50px"
+        width="55px"
         label="序号"
-        align="center">
+        text-align="center">
       </el-table-column>
 
       <el-table-column
@@ -261,7 +262,7 @@ export default ({
         data: {
           rid: this.updateRedForm.rid,
           count: this.updateRedForm.count,
-          totalMoney: this.updateRedForm.totalMoney,
+          totalMoney: parseFloat(this.updateRedForm.totalMoney).toFixed(2),
           type: this.updateRedForm.typeRadio
         }
       }).then(response => {
