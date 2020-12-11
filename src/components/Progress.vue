@@ -25,7 +25,7 @@
                 {{item.count-item.restCount}}/{{item.count}}个,
                 {{(item.totalMoney-item.restMoney).toFixed(2)}}/{{item.totalMoney}}元
               </p>
-              <el-button style="padding: 10px 10px;" type="text" class="button" @click="handleLookRedInfo(item)">查看大家的手气</el-button>
+              <el-button style="padding: 10px" type="text" class="button" @click="handleLookRedInfo(item)">查看大家的手气</el-button>
             </div>
           </div>
         </el-card>
@@ -197,11 +197,6 @@ export default {
   .button {
     padding: 0;
     float: right;
-  }
-
-  .image {
-    width: 80%;
-    display: block;
   }
 
   .clearfix:before,
