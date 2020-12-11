@@ -3,8 +3,10 @@ import Router from 'vue-router'
 import AdminHome from '@/components/AdminHome'
 import RedPacketCreate from '@/components/RedPacketCreate'
 import BasicMes from '@/components/BasicMes'
-import StatusSet from '@/components/StatusSet'
+// import StatusSet from '@/components/StatusSet'
 import Progress from '@/components/Progress'
+import GrabEnvelope from '@/components/GrabEnvelope'
+import EnvelopeRain from '@/components/EnvelopeRain'
 
 Vue.use(Router)
 
@@ -28,9 +30,9 @@ export default new Router({
           component: BasicMes
         },
         {
-          path: '/StatusSet',
-          name: '/StatusSet',
-          component: StatusSet
+          path: '/GrabEnvelope',
+          name: '/GrabEnvelope',
+          component: GrabEnvelope
         },
         {
           path: '/Progress',
@@ -38,6 +40,11 @@ export default new Router({
           component: Progress
         }
       ]
+    },
+    {
+      path: '/EnvelopeRain',
+      name: 'EnvelopeRain',
+      component: EnvelopeRain
     }
   ]
 })

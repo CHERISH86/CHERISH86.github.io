@@ -1,5 +1,5 @@
 <template>
-  <div class="hello" style="height: 100%">
+  <div style="height: 100%">
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 
@@ -75,7 +75,7 @@ export default {
           this.$router.push('/BasicMes')
           break
         case '2-2':
-          this.$router.push('/StatusSet')
+          this.$router.push('/GrabEnvelope')
           break
         case '3':
           this.$router.push('/Progress')
