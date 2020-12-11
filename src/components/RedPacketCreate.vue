@@ -94,7 +94,7 @@ export default {
             method: 'post',
             url: '/api/setred',
             data: {
-              totalMoney: this.submitRedPacket.totalMoney,
+              totalMoney: parseFloat(this.submitRedPacket.totalMoney).toFixed(2),
               count: this.submitRedPacket.count,
               // 创建者id为假数据！！！
               sendId: 2
