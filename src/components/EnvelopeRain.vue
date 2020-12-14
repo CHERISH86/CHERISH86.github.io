@@ -1,3 +1,10 @@
+<!--
+ * @Description: 用户端——红包雨界面
+ * @Autor: 王均祥
+ * @Date: 2020-12-09 15:42:29
+ * @LastEditors: 王均祥
+ * @LastEditTime: 2020-12-14 09:14:21
+-->
 <template>
   <div class="">
     <div id="redzone">
@@ -17,7 +24,14 @@ export default {
   },
   computed: {},
   methods: {
-    // 动态添加红包方法
+    /**
+     * @description: 动态添加红包方法
+     * @param {*} left
+     * @param {*} height
+     * @param {*} src
+     * @return {*}
+     * @author: 王均祥
+     */
     addBao: function (left, height, src) {
       var div = document.createElement('div')
       var img = document.createElement('img')
