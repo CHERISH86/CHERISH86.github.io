@@ -3,12 +3,13 @@
  * @Autor: 王均祥
  * @Date: 2020-12-09 15:42:29
  * @LastEditors: 王均祥
- * @LastEditTime: 2020-12-14 17:58:13
+ * @LastEditTime: 2020-12-15 16:45:49
 -->
 <template>
   <div>
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <div id="redzone">
+      <el-button @click="getAllEnvelope">测试各方法</el-button>
     </div>
     <div>
       <el-dialog
@@ -27,11 +28,25 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+
 export default {
   name: 'hongbao',
   data () {
     return {
-      envelopeList: [1, 2, 3, 1, 5, 6],
+      envelope: {
+        list: [
+          {
+            rid: 1,
+            totalMoney: 1,
+            count: 1,
+            createTime: '--',
+            status: 0
+          }
+        ], // 所有红包列表，包括已抢完的和未抢的
+        idList: [1, 2, 3, 1, 5, 6] // 所有未抢红包id，根据envelope.list筛选得出
+      },
       envelopeMoney: 0,
       dialogVisible: false,
       moneyVisible: false
@@ -39,14 +54,6 @@ export default {
   },
   computed: {},
   methods: {
-    /**
-     * @description: 动态添加红包方法
-     * @param {*} left
-     * @param {*} height
-     * @param {*} src
-     * @return {*}
-     * @author: 王均祥
-     */
     addBao: function (left, height, src, id) {
       var div = document.createElement('div')
       var img = document.createElement('img')
@@ -78,6 +85,53 @@ export default {
       //   }
       // }, 4500)
     },
+    /**
+     * @description: 获取所有红包信息方法，同BasixMes接口调用
+     * @param {*}
+     * @return {envelopeList}
+     * @author: 王均祥
+     */
+    getAllEnvelope () {
+      var envelopeList = [
+        { rid: 1,
+          totalMoney: 1,
+          count: 1,
+          createTime: '--',
+          status: 0
+        }
+      ]
+      axios({
+        method: 'post',
+        url: '/api/getpageallred',
+        data: {
+          currentPage: 1,
+          pageSize: 10
+        }
+      }).then(res => {
+        envelopeList = res.data.data.pageRecode
+        var totalPage = res.data.data.totalPage
+        for (let i = 2; i < totalPage + 1; i++) {
+          axios({
+            method: 'post',
+            url: '/api/getpageallred',
+            data: {
+              currentPage: i,
+              pageSize: 10
+            }
+          }).then(function (res) {
+            envelopeList = envelopeList.concat(res.data.data.pageRecode)
+          }).catch(function (error) {
+            console.log(error)
+          })
+        }
+        setTimeout(function () {
+          console.log('SET：' + envelopeList.length)
+          return envelopeList
+        }, 800)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    },
     handleEnvelopeClick () {
       console.log(event.currentTarget)
       this.envelopeMoney++
@@ -87,7 +141,7 @@ export default {
       // document.getElementById('redzone').removeChild(event.currentTarget)
     },
     handleOpenEnve () {
-      // console.log(this.removeByIndex(this.envelopeList, 1))
+      console.log(this.removeByIndex(this.envelope.idList, 1))
       this.moneyVisible = true
       console.log('抢到了')
     },
@@ -116,27 +170,12 @@ export default {
     }
   },
   mounted () {
-    // axios({
-    //   method: 'post',
-    //   url: '/api/getpageallred',
-    //   data: {
-    //     currentPage: this.pagination.currentPage,
-    //     pageSize: 10
-    //   }
-    // }).then(res => {
-    //   this.tableData = []
-    //   this.tableData = res.data.data.pageRecode
-    //   this.tableData.status = 1
-    // }).catch(function (error) {
-    //   console.log(error)
-    // })
-
     let vueObject = this
-    var divIdList = vueObject.envelopeList
+    var divIdList = vueObject.envelope.idList
     // 定时器 循环执行 每隔1500ms
     var intervalId = setInterval(function () {
       console.log('执行setInterval')
-      // console.log('mounted:' + vueObject.envelopeList)
+      // console.log('mounted:' + vueObject.envelope.idList)
       if (divIdList.length === 0) {
         clearInterval(intervalId)
         return

@@ -123,21 +123,25 @@
       </div>
     </el-dialog>
 
-    <div class="block">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page.sync="pagination.currentPage"
-        :page-size="pagination.pageSize"
-        layout="prev, pager, next, jumper"
-        :total="pagination.total">
-      </el-pagination>
-    </div>
+    <nav style="text-align: center">
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="pagination.currentPage"
+          :page-size="pagination.pageSize"
+          layout="prev, pager, next, jumper"
+          :total="pagination.total">
+        </el-pagination>
+      </div>
+    </nav>
   </div>
 </template>
 
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script>
+
 import axios from 'axios'
+
 export default ({
   data (){
     var validateCount = (rule, value, callback) => {
@@ -359,6 +363,7 @@ export default ({
         })
       })
     },
+    // 对应红包列表 文字状态说明
     getStatus(row) {
       switch(row.status) {
         case 0 :
@@ -372,6 +377,7 @@ export default ({
           break
       }
     },
+    // 对应红包列表 按钮颜色
     getTagType(row) {
       switch(row.status) {
         case 0 :
@@ -389,6 +395,11 @@ export default ({
       return row.status === value
     },
     goToCreate(){
+      // 动态设置分页栏的位置 使其居中
+      var div = document.getElementsByClassName('block')[0]
+      var width = div.clientWidth
+      // div.style.marginLeft = '-29px'
+      console.log("不是mounted分页栏宽度：" + width)
       this.$router.replace('/RedPacketCreate')
     }
   },
@@ -407,6 +418,12 @@ export default ({
     }).catch(function (error) {
       console.log(error)
     })
+    setTimeout(function(){
+      // 动态设置分页栏的位置 使其居中
+      var div = document.getElementsByClassName('block')[0]
+      var width = div.clientWidth
+      div.style.marginLeft = -width/2 + 'px'
+    }, 400)
   }
 })
 </script>
@@ -415,6 +432,6 @@ export default ({
 .block  {
 /* text-align: center;
 margin-top: 12px; */
-position: absolute;left: 50%; bottom: 7%;
+  position: absolute; left: 57%; bottom: 7%;
 }
 </style>
