@@ -180,6 +180,12 @@ export default {
     }).catch(function (error) {
       console.log(error)
     })
+    setTimeout(function () {
+      // 动态设置分页栏的位置 使其居中
+      var div = document.getElementsByClassName('block')[0]
+      var width = div.clientWidth
+      div.style.marginLeft = -width / 2 + 'px'
+    }, 400)
   }
 }
 </script>
@@ -201,18 +207,16 @@ export default {
 
   .clearfix:before,
   .clearfix:after {
-      display: table;
-      content: "";
+    display: table;
+    content: "";
   }
 
   .clearfix:after {
-      clear: both
+    clear: both
   }
 
   .block  {
-    text-align: center;
-    margin-top: 12px;
-    float: bottom;
+    position: absolute;left: 57%; bottom: 7%;
   }
 
   .el-card:hover {
