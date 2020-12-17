@@ -3,13 +3,13 @@
  * @Autor: 王均祥
  * @Date: 2020-12-09 15:42:29
  * @LastEditors: 王均祥
- * @LastEditTime: 2020-12-16 18:16:17
+ * @LastEditTime: 2020-12-17 10:13:50
 -->
 <template>
   <div>
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <div id="redzone">
-      <el-button @click="createEnvelopeList">测试各方法</el-button>
+      <el-button @click="createEnvelopeList(envelope.list)">测试各方法</el-button>
     </div>
     <div>
       <el-dialog
@@ -42,7 +42,7 @@ export default {
             totalMoney: 1,
             count: 1,
             createTime: '--',
-            status: 0
+            status: 1
           }
         ], // 所有红包列表，包括已抢完的和未抢的
         idList: [1, 2, 3, 1, 5, 6], // 所有未抢红包id，根据envelope.list筛选得出
@@ -50,7 +50,7 @@ export default {
         totalPage: 1,
         total: 1
       },
-      rid: 0,
+      currentRid: 0, // 当前点击的红包id
       envelopeMoney: 0,
       dialogVisible: false,
       moneyVisible: false
@@ -125,7 +125,10 @@ export default {
     handleEnvelopeClick () {
       // console.log('点击ID：' + event.currentTarget.id)
       // this.envelopeMoney++
-      this.rid = event.currentTarget.id
+      // 将div id赋值给所要抢的红包id
+      this.currentRid = event.currentTarget.id
+      // 点击后暂停红包下落
+      document.getElementById(this.currentRid).style.animationPlayState = 'paused'
       this.dialogVisible = true
       // var oDiv = document.getElementsByClassName('box-out')[0]
       // 开红包后删除该元素
@@ -137,7 +140,7 @@ export default {
         method: 'post',
         url: '/api/getred',
         data: {
-          rid: this.rid,
+          rid: this.currentRid,
           uid: 1
         }
       }).then(res => {
@@ -149,6 +152,7 @@ export default {
           this.moneyVisible = true
           console.error(res.data.message)
         }
+        document.getElementById('redzone').removeChild(document.getElementById(this.currentRid))
       }).catch(error => {
         console.error(error)
       })
@@ -156,6 +160,9 @@ export default {
     handleDialogClose () {
       this.envelopeMoney = 0
       this.moneyVisible = false
+      if (document.getElementById(this.currentRid)) {
+        document.getElementById(this.currentRid).style.animationPlayState = 'running'
+      }
       console.log(this.envelopeMoney)
     },
     // 根据数组元素 寻找下标
@@ -176,7 +183,12 @@ export default {
       }
       return -1
     },
-    // 测试在普通函数中 定时生成红包雨
+    /**
+     * @description: 定时创建红包雨函数 根据后端‘正在抢’的红包
+     * @param {*} list
+     * @return {*}
+     * @author: 王均祥
+     */
     createEnvelopeList (list) {
       console.log('list长度：' + list.length)
       let envelopeCount = 0
