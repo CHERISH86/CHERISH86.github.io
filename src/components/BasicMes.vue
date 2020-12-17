@@ -1,33 +1,62 @@
 <template>
   <div>
+    <div style="float: right; padding-bottom: 10px">
+      <el-button
+        type="primary"
+        icon="el-icon-delete"
+        plain
+        size="medium"
+        @click="handleDeleteSearch">清空搜索</el-button>
+      <el-input
+          v-model="search"
+          style="width: 200px"
+          size="medium"
+          placeholder="输入红包ID搜索"/>
+      <el-button
+        type="primary"
+        icon="el-icon-search"
+        plain
+        size="medium"
+        @click="handleSearch">搜索</el-button>
+      <el-button
+        type="primary"
+        plain
+        size="medium"
+        @click="goToCreate">添加红包</el-button>
+    </div>
     <el-table
       :data="tableData"
       style="width: 100%"
       :row-style="{height: '0px'}"
-      :cell-style="{padding: '8px'}">
+      :cell-style="{padding: '7px'}"
+      :header-cell-style="headerStyle"
+      border="1px">
 
       <!-- width宽度不够会导致数字垂直排列 -->
       <el-table-column
         type="index"
-        width="55px"
+        width= "100px"
         label="序号"
         text-align="center">
       </el-table-column>
 
       <el-table-column
         prop="rid"
+        width="130px"
         label="红包ID"
         align="center">
       </el-table-column>
 
       <el-table-column
         prop="totalMoney"
+        width="150px"
         label="红包金额"
         align="center">
       </el-table-column>
 
       <el-table-column
         prop="count"
+        width="150px"
         label="红包个数"
         align="center">
       </el-table-column>
@@ -41,6 +70,7 @@
       <!-- 0-未开抢 1-正在抢 2-已结束 -->
       <el-table-column
         prop="status"
+        width="150px"
         label="状态"
         align="center"
         :filters="[{text:'未开抢',value: 0}, {text:'正在抢',value:1}, {text:'已抢完',value:2}]"
@@ -54,15 +84,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center">
-        <template slot="header" slot-scope="scope">
-           <el-button
-            type="primary"
-            plain round
-            size="small"
-            @click="goToCreate">添加红包
-          </el-button>
-        </template>
+      <el-table-column width="300px" label="操作" align="center">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -123,17 +145,15 @@
       </div>
     </el-dialog>
 
-    <nav style="text-align: center">
-      <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="pagination.currentPage"
-          :page-size="pagination.pageSize"
-          layout="prev, pager, next, jumper"
-          :total="pagination.total">
-        </el-pagination>
-      </div>
-    </nav>
+    <div class="block">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="pagination.currentPage"
+        :page-size="pagination.pageSize"
+        layout="prev, pager, next, jumper"
+        :total="pagination.total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -232,16 +252,20 @@ export default ({
         visible: false,
         labelWidth: '100px'
       },
-      updateRedForm: {
-        totalMoney: '',
-        count: '',
-        rid: '',
-        typeRadio: '1'
+      headerStyle: {
+        'padding': '5px'
       },
       pagination: {
         total: 1,
         currentPage: 1,
         pageSize: 10
+      },
+      search: '',
+      updateRedForm: {
+        totalMoney: '',
+        count: '',
+        rid: '',
+        typeRadio: '1'
       },
       rules: {
         count: [
@@ -257,6 +281,50 @@ export default ({
       this.updateRedForm.totalMoney = row.totalMoney
       this.updateRedForm.count = row.count
       this.updateRedForm.rid = row.rid
+    },
+    handleSearch() {
+      axios({
+        method: 'post',
+        url: '/api/query/rid',
+        params: {
+          rid: this.search,
+        }
+      }).then(res => {
+        this.tableData = []
+        this.tableData = res.data.data
+        this.pagination.total = res.data.data.length
+        this.pagination.currentPage = 1
+        setTimeout(function(){
+          // 动态设置分页栏的位置 使其居中
+          var div = document.getElementsByClassName('block')[0]
+          var width = div.clientWidth
+          div.style.marginLeft = -width/2 + 'px'
+        }, 400)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    },
+    handleDeleteSearch () {
+      this.search = ''
+      axios({
+        method: 'post',
+        url: '/api/getpageallred',
+        data: {
+          currentPage: 1,
+          pageSize: 10
+        }
+      }).then(res=> {
+        this.tableData = res.data.data.pageRecode
+        this.pagination.total = res.data.data.total
+        setTimeout(function(){
+          // 动态设置分页栏的位置 使其居中
+          var div = document.getElementsByClassName('block')[0]
+          var width = div.clientWidth
+          div.style.marginLeft = -width/2 + 'px'
+        }, 400)
+      }).catch(error=> {
+        console.log(error)
+      })
     },
     submitUpdateRedForm(formName){
       console.log(this.updateRedForm.totalMoney,this.updateRedForm.count,this.updateRedForm.rid,this.updateRedForm.type)
@@ -283,21 +351,21 @@ export default ({
             currentPage: this.pagination.currentPage,
             pageSize: 10
           }
-          }).then(res => {
+        }).then(res => {
           this.tableData = []
           this.tableData = res.data.data.pageRecode
           this.tableData.status = 1
         }).catch(function (error) {
           console.log(error)
         })
-        }).catch(error => {
-          this.$message({
-            showClose: true,
-            message: error,
-            type: 'error',
-            center: true
-          })
+      }).catch(error => {
+        this.$message({
+          showClose: true,
+          message: error,
+          type: 'error',
+          center: true
         })
+      })
       this.dialogForm.visible = false
     },
     handleCurrentChange(){
