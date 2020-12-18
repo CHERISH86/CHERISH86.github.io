@@ -1,28 +1,58 @@
 <template>
   <div>
-    <div style="float: right; padding-bottom: 10px">
-      <el-button
-        type="primary"
-        icon="el-icon-delete"
-        plain
-        size="medium"
-        @click="handleDeleteSearch">清空搜索</el-button>
-      <el-input
-          v-model="search"
-          style="width: 200px"
+    <div>
+      <div style="display: flex; float:left">
+        <el-button
+          style="background-color: #ECF5FF"
           size="medium"
-          placeholder="输入红包ID搜索"/>
-      <el-button
-        type="primary"
-        icon="el-icon-search"
-        plain
-        size="medium"
-        @click="handleSearch">搜索</el-button>
-      <el-button
-        type="primary"
-        plain
-        size="medium"
-        @click="goToCreate">添加红包</el-button>
+          plain
+          @click="handleAllRedInfo">
+          红包总览</el-button>
+        <div style="display: flex">
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">总红包数：{{allRedInfo.totalRedCount}}</div>
+          </transition>
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">未开抢：{{allRedInfo.redNotCount}}</div>
+          </transition>
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">正在抢：{{allRedInfo.redSnatchCount}}</div>
+          </transition>
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">已抢完：{{allRedInfo.redOverCount}}</div>
+          </transition>
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">总金额：{{allRedInfo.totalMoney}}</div>
+          </transition>
+          <transition name="el-zoom-in-center">
+              <div v-show="allRedInfoShow" class="transition-box">已抢金额：{{allRedInfo.snatchMoney}}</div>
+          </transition>
+        </div>
+      </div>
+      <div style="float: right; padding-bottom: 10px">
+        <el-button
+          style="background-color: #ECF5FF"
+          icon="el-icon-delete"
+          plain
+          size="medium"
+          @click="handleDeleteSearch">清空搜索</el-button>
+        <el-input
+            v-model="search"
+            style="width: 150px"
+            size="medium"
+            placeholder="输入红包ID搜索"/>
+        <el-button
+          style="background-color: #ECF5FF"
+          icon="el-icon-search"
+          plain
+          size="medium"
+          @click="handleSearch">搜索</el-button>
+        <el-button
+          style="background-color: #ECF5FF"
+          plain
+          size="medium"
+          @click="goToCreate">添加红包</el-button>
+      </div>
     </div>
     <el-table
       :data="tableData"
@@ -30,7 +60,7 @@
       :row-style="{height: '0px'}"
       :cell-style="{padding: '7px'}"
       :header-cell-style="headerStyle"
-      border="1px">
+      border>
 
       <!-- width宽度不够会导致数字垂直排列 -->
       <el-table-column
@@ -50,7 +80,7 @@
       <el-table-column
         prop="totalMoney"
         width="150px"
-        label="红包金额"
+        label="红包金额（元）"
         align="center">
       </el-table-column>
 
@@ -177,6 +207,14 @@ export default ({
       }
     }
     return {
+      allRedInfo: {
+        totalRedCount: 600,
+        redNotCount: 190,
+        redSnatchCount: 320,
+        redOverCount: 90,
+        totalMoney: 7427.11,
+        snatchMoney: 3651.76
+      },
       tableData: [
         {
         rid: 1,
@@ -260,6 +298,7 @@ export default ({
         currentPage: 1,
         pageSize: 10
       },
+      allRedInfoShow: false,
       search: '',
       updateRedForm: {
         totalMoney: '',
@@ -275,6 +314,17 @@ export default ({
     }
   },
   methods: {
+    handleAllRedInfo (){
+      this.allRedInfoShow = !this.allRedInfoShow
+      axios({
+        method: 'get',
+        url: '/api/allredinfo',
+      }).then(res => {
+        this.allRedInfo = res.data.data
+      }).catch(function (error) {
+        console.log(error)
+      })
+    },
     handleEdit (index, row) {
       console.log(index, row)
       this.dialogForm.visible = true
@@ -501,5 +551,19 @@ export default ({
 /* text-align: center;
 margin-top: 12px; */
   position: absolute; left: 57%; bottom: 7%;
+}
+.transition-box {
+  padding: 8px 5px;
+  margin-left: 5px;
+  height: 35px;
+  border-radius: 4px;
+  background-color: #6abcff;
+  text-align: center;
+  color: #fff;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.transition-box:nth-child(2n+1){
+  background-color: #5db2ff;
 }
 </style>
