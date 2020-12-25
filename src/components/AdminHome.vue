@@ -22,7 +22,13 @@
                 <span>创建红包</span>
               </template>
             </el-menu-item>
-            <el-submenu index="2">
+            <el-menu-item index="2">
+              <template slot="title">
+                <i class="el-icon-setting"></i>
+                <span>编辑红包</span>
+              </template>
+            </el-menu-item>
+            <!-- <el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-setting"></i>
                 <span>编辑红包</span>
@@ -35,7 +41,7 @@
                   <span style="margin-left: 13px">修改状态</span>
                 </el-menu-item>
               </el-menu-item-group>
-            </el-submenu>
+            </el-submenu> -->
             <el-menu-item index="3">
               <i class="el-icon-message"></i>
               <span slot="title">查看进度</span>
@@ -71,12 +77,12 @@ export default {
         case '1':
           this.$router.push('/RedPacketCreate')
           break
-        case '2-1':
+        case '2':
           this.$router.push('/BasicMes')
           break
-        case '2-2':
-          this.$router.push('/GrabEnvelope')
-          break
+        // case '2-2':
+        //   this.$router.push('/GrabEnvelope')
+        //   break
         case '3':
           this.$router.push('/Progress')
           break
