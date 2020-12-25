@@ -67,7 +67,7 @@
         type="index"
         width= "100px"
         label="序号"
-        text-align="center">
+        align="center">
       </el-table-column>
 
       <el-table-column
@@ -385,7 +385,8 @@ export default ({
           rid: this.updateRedForm.rid,
           count: this.updateRedForm.count,
           totalMoney: parseFloat(this.updateRedForm.totalMoney).toFixed(2),
-          type: this.updateRedForm.typeRadio
+          type: this.updateRedForm.typeRadio,
+          sendId: 2
         }
       }).then(response => {
         this.$message({
